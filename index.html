@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --secondary-color: #b81d24;
+            --text-color: #ffffff;
+            --background-dark: #000000;
+            --background-gray: #141414;
+            --input-bg: #333333;
+            --input-text: #ffffff;
+            --error-color: #e87c03;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            font-weight: 400;
+        }
+        
+        .activation-form {
+            width: 100%;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: var(--background-gray);
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .activation-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 4px;
+            color: var(--input-text);
+            text-align: center;
+            letter-spacing: 3px;
+            font-weight: 500;
+        }
+        
+        .activation-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        
+        .activation-input::placeholder {
+            color: #8c8c8c;
+        }
+        
+        .btn {
+            padding: 16px;
+            width: 100%;
+            font-size: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid #8c8c8c;
+            margin-top: 15px;
+            text-transform: none;
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 3px;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .error {
+            background-color: rgba(232, 124, 3, 0.2);
+            color: var(--error-color);
+            display: block;
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success-color);
+            display: block;
+        }
+        
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .modal {
+            background-color: var(--background-gray);
+            border-radius: 4px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.6);
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #8c8c8c;
+        }
+        
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+        
+        .phone-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .phone-icon {
+            margin-right: 15px;
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-color);
+        }
+        
+        .modal-actions {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .modal-actions .btn {
+            max-width: 200px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #8c8c8c;
+            font-size: 14px;
+        }
+        
+        .netflix-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.8) 100%);
+            z-index: -1;
+        }
+        
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-image: url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            z-index: -2;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .activation-form {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-image"></div>
+    <div class="netflix-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">Netflix</div>
+        </header>
+        
+        <div class="hero">
+            <h1>Finish Setting Up Your Account</h1>
+            <p class="subtitle">Enter your activation code to start enjoying unlimited movies and TV shows.</p>
+            
+            <div class="activation-form">
+                <div class="input-group">
+                    <input type="text" id="activationCode" class="activation-input" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19">
+                    <div id="statusMessage" class="status-message"></div>
+                </div>
+                
+                <button id="activateBtn" class="btn">Activate Membership</button>
+                <p style="margin: 20px 0; color: #8c8c8c;">Need help with your code? Call +1-808-217-1305</p>
+                <button id="callToActivateBtn" class="btn btn-secondary">
+                    Get Help by Phone
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 StreamFlix. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <!-- Call to Activate Modal -->
+    <div id="callModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Contact Support</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Our support team is standing by to help you activate your membership.</p>
+                <div class="phone-number">
+                    <svg class="phone-icon" viewBox="0 0 24 24">
+                        <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                    </svg>
+                    1-808-217-1305
+                </div>
+                <p>Please have your activation code ready when you call.</p>
+            </div>
+            <div class="modal-actions">
+                <a href="tel:1-808-217-1305" class="btn">Call Now</a>
+                <button id="cancelCall" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Format activation code as user types (XXXX-XXXX-XXXX-XXXX)
+        document.getElementById('activationCode').addEventListener('input', function(e) {
+            let input = e.target;
+            let value = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+            let formattedValue = '';
+            
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0 && i < 16) {
+                    formattedValue += '-';
+                }
+                formattedValue += value[i];
+            }
+            
+            input.value = formattedValue;
+        });
+        
+        // Validate and process activation code
+        document.getElementById('activateBtn').addEventListener('click', function() {
+            const codeInput = document.getElementById('activationCode');
+            const statusMessage = document.getElementById('statusMessage');
+            const code = codeInput.value.replace(/-/g, '');
+            
+            statusMessage.classList.remove('error', 'success');
+            
+            // Simple validation (in a real app you'd check against a database)
+            if (code.length < 16) {
+                statusMessage.textContent = 'Please enter a valid activation code (16 characters)';
+                statusMessage.classList.add('error');
+                return;
+            }
+            
+            // Simulate activation process
+            statusMessage.textContent = 'Verifying your activation code...';
+            statusMessage.classList.add('success');
+            
+            // In a real app, you would send this to your server for validation
+            setTimeout(() => {
+                statusMessage.textContent = 'Activation successful! Preparing your StreamFlix experience...';
+                setTimeout(() => {
+                    window.location.href = '#'; // Would redirect to the actual streaming service
+                }, 2000);
+            }, 1500);
+        });
+        
+        // Modal handling
+        const modal = document.getElementById('callModal');
+        
+        document.getElementById('callToActivateBtn').addEventListener('click', function() {
+            modal.classList.add('active');
+        });
+        
+        document.getElementById('closeModal').addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+        
+        document.getElementById('cancelCall').addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+        
+        // Close modal when clicking outside of it
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
